@@ -6,7 +6,7 @@
 package hotelmanagement;
 
 
-import guest.Customer;
+import vu_guest.Customer;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
