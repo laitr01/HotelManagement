@@ -11,10 +11,17 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.Vector;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import projectinterface.CentralInterface;
+
 
 /**
  *
@@ -29,10 +36,13 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
     ResultSet rs;
     String sql;
     Vector rHeader, rData, row;
-    
+    Vector customers, send; 
+    String cusid, cusname, phone, email, identifier;
+    HashMap<String, Vector> result;
     public SearchCustomer(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        tblCus.getTableHeader().setPreferredSize(new Dimension(1200, 20));
         setTitle("Search Customer");
         db= new DbConnect("sa", "root");
         db.createConnect();
@@ -41,15 +51,19 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
         rHeader = new Vector();
         rData = new Vector();
         rHeader.add("Customer ID");
-        rHeader.add("Customer Name");
+        rHeader.add("Personal Identifier");
         rHeader.add("DOB");
+        rHeader.add("Customer Name");
         rHeader.add("Gender");
-        //rHeader.add("Address");
-        //rHeader.add("Identifier");
-        //rHeader.add("Phone");
+        rHeader.add("Company");
+        rHeader.add("Address");
+        rHeader.add("Status");
+        rHeader.add("Phone");
+        rHeader.add("Email");
         cusModel = new DefaultTableModel(rData,rHeader);
         showData();
         formDisplayCentral();
+             
     }
       @Override
     public void formDisplayCentral() {
@@ -78,11 +92,18 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
                 row.add(rs.getString(2));
                 row.add(rs.getDate(3));
                 row.add(rs.getString(4));
-                //row.add(rs.getString(5));
+                row.add(rs.getString(5));
+                row.add(rs.getString(6));
+                row.add(rs.getString(7));
+                row.add(rs.getString(8));
+                row.add(rs.getString(9));
+                row.add(rs.getString(10));
                 //rData.add(row);
                 cusModel.addRow(row);
             }
+            
             tblCus.setModel(cusModel);
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
@@ -104,12 +125,11 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
         jLabel2 = new javax.swing.JLabel();
         txtPhone = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblCus = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblCus = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -117,7 +137,32 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
 
         jLabel1.setText("Name");
 
+        txtName.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtNameCaretUpdate(evt);
+            }
+        });
+        txtName.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtNameInputMethodTextChanged(evt);
+            }
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+        });
+
+        txtIden.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtIdenCaretUpdate(evt);
+            }
+        });
+
         jLabel2.setText("Identifier");
+
+        txtPhone.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtPhoneCaretUpdate(evt);
+            }
+        });
 
         jLabel3.setText("Phone Number");
 
@@ -136,7 +181,7 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtIden, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,7 +201,23 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
                 .addContainerGap(32, Short.MAX_VALUE))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/ok24.png"))); // NOI18N
+        jButton1.setText("OK");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/cancel24.png"))); // NOI18N
+        jButton2.setText("Cancel");
+
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/Iconic_26d4(0)_24.png"))); // NOI18N
+        jButton3.setText("Reset");
+
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(500, 700));
 
         tblCus.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -169,29 +230,17 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tblCus);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 10, Short.MAX_VALUE))
-        );
-
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/ok24.png"))); // NOI18N
-        jButton1.setText("OK");
-
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/cancel24.png"))); // NOI18N
-        jButton2.setText("Cancel");
-
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/Iconic_26d4(0)_24.png"))); // NOI18N
-        jButton3.setText("Reset");
+        tblCus.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tblCus.setMaximumSize(new java.awt.Dimension(2147483647, 1000));
+        tblCus.setOpaque(false);
+        tblCus.setPreferredSize(new java.awt.Dimension(1200, 100));
+        tblCus.setTableHeader(tblCus.getTableHeader());
+        tblCus.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCusMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblCus);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -206,7 +255,7 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
                             .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -221,9 +270,9 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
                         .addComponent(jButton2)
                         .addGap(18, 18, 18)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -236,15 +285,171 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(2, 2, 2))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtNameInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtNameInputMethodTextChanged
+           
+        
+    }//GEN-LAST:event_txtNameInputMethodTextChanged
+
+    private void txtNameCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtNameCaretUpdate
+        cusModel.getDataVector().clear();
+        showData();
+        Vector obj =  cusModel.getDataVector();
+        result = new HashMap<>();
+        int i =1;
+        for (Object customer : obj) {
+            //System.out.println(customer.toString());
+            Vector cus = (Vector) customer;
+            result.put(cus.get(3).toString()+i, cus);
+            i++;
+        }
+        Set object = result.keySet();
+        
+            //System.out.println(object.toString());
+        // basic testing code to get started
+        String word = txtName.getText();
+        // Pass NearbyWords any Dictionary implementation you prefer
+
+        Iterator words = object.iterator();
+        Vector sub = new Vector();
+        while (words.hasNext()) {
+            Object next = words.next();
+            if(next.toString().toLowerCase().contains(word)){
+                sub.add(next);
+            }
+            //d.addWord(next.toString());
+        }
+        //System.err.println(result.get("Lai Van Trach").toString());
+        cusModel.getDataVector().clear();
+        if(!sub.isEmpty()){
+            for (Object ob : sub) {
+                cusModel.addRow(result.get(ob.toString()));
+            }
+        }
+        tblCus.setModel(cusModel);
+        repaint();
+        //System.out.println("Spelling Suggestions for \""+word+"\" are:");
+        //System.out.println(suggest);
+    }//GEN-LAST:event_txtNameCaretUpdate
+
+    private void txtIdenCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtIdenCaretUpdate
+        cusModel.getDataVector().clear();
+        showData();
+        Vector obj =  cusModel.getDataVector();
+        result = new HashMap<>();
+        int i = 1;
+        for (Object customer : obj) {
+            //System.out.println(customer.toString());
+            Vector cus = (Vector) customer;
+            result.put(cus.get(1).toString()+i, cus);
+            i++;
+        }
+        Set object = result.keySet();
+        
+            //System.out.println(object.toString());
+        // basic testing code to get started
+        String word = txtIden.getText();
+        // Pass NearbyWords any Dictionary implementation you prefer
+
+        Iterator words = object.iterator();
+        Vector sub = new Vector();
+        while (words.hasNext()) {
+            Object next = words.next();
+            if(next.toString().contains(word)){
+                sub.add(next);
+            }
+            //d.addWord(next.toString());
+        }
+        //System.err.println(result.get("Lai Van Trach").toString());
+        cusModel.getDataVector().clear();
+        if(!sub.isEmpty()){
+            for (Object ob : sub) {
+                cusModel.addRow(result.get(ob.toString()));
+            }
+        }
+        tblCus.setModel(cusModel);
+        repaint();
+        //System.out.println("Spelling Suggestions for \""+word+"\" are:");
+        //System.out.println(suggest);
+    }//GEN-LAST:event_txtIdenCaretUpdate
+
+    private void txtPhoneCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtPhoneCaretUpdate
+        cusModel.getDataVector().clear();
+        showData();
+        Vector obj =  cusModel.getDataVector();
+        result = new HashMap<>();
+        int i =1;
+        for (Object customer : obj) {
+            //System.out.println(customer.toString());
+            Vector cus = (Vector) customer;
+            result.put(cus.get(8).toString()+i, cus);
+            i++;
+        }
+        Set object = result.keySet();
+        
+            //System.out.println(object.toString());
+        // basic testing code to get started
+        String word = txtPhone.getText();
+        // Pass NearbyWords any Dictionary implementation you prefer
+
+        Iterator words = object.iterator();
+        Vector sub = new Vector();
+        while (words.hasNext()) {
+            Object next = words.next();
+            if(next.toString().toLowerCase().contains(word)){
+                sub.add(next);
+            }
+            //d.addWord(next.toString());
+        }
+        //System.err.println(result.get("Lai Van Trach").toString());
+        cusModel.getDataVector().clear();
+        if(!sub.isEmpty()){
+            for (Object ob : sub) {
+                cusModel.addRow(result.get(ob.toString()));
+            }
+        }
+        tblCus.setModel(cusModel);
+        repaint();
+        //System.out.println("Spelling Suggestions for \""+word+"\" are:");
+        //System.out.println(suggest);
+    }//GEN-LAST:event_txtPhoneCaretUpdate
+
+    private void tblCusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCusMouseClicked
+        int row = tblCus.getSelectedRow();
+        if(row==-1){
+            JOptionPane.showMessageDialog(this, "No row selected");
+            return;
+        }
+        cusid = String.valueOf(tblCus.getValueAt(row, 0));
+        cusname = (String) tblCus.getValueAt(row, 3);
+        phone = (String) tblCus.getValueAt(row, 8);
+        identifier = (String) tblCus.getValueAt(row, 1);
+        email = (String) tblCus.getValueAt(row, 9);
+        send = new Vector();
+        send.add(cusid);
+        send.add(cusname);
+        send.add(phone);
+        send.add(identifier);
+        send.add(email);
+    }//GEN-LAST:event_tblCusMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(send.isEmpty()){
+            JOptionPane.showMessageDialog(this, "No row selected");
+            return;
+        }
+        setVisible(false);
+        new ReservationDialog(null, true, send);
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -296,8 +501,7 @@ public class SearchCustomer extends javax.swing.JDialog implements CentralInterf
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblCus;
     private javax.swing.JTextField txtIden;
     private javax.swing.JTextField txtName;
