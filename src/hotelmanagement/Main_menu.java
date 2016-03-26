@@ -395,6 +395,7 @@ public class Main_menu extends javax.swing.JFrame {
     private void jButton22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton22ActionPerformed
         cEditable.add(new Reservation(),"Rer");
         cLayout.show(cEditable, "Rer");
+        
 //        if(tabb_main.getTabCount()!=0)
 //             tabb_main.removeAll();
 //        RoomPane rooms = new RoomPane();
