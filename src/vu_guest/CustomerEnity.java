@@ -28,8 +28,20 @@ public class CustomerEnity {
         this.age = age;
         this.cusID = cusID;
     }
-
-    public CustomerEnity() {
+    public CustomerEnity(String identifier, String fullname, String gender, String company, String address, String phone, String email, String status, Date age) {
+        this.identifier = identifier;
+        this.fullname = fullname;
+        this.gender = gender;
+        this.company = company;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+        this.status = status;
+        this.age = age;
+    }
+    @Override
+    public String toString(){
+        return identifier+" "+fullname+" "+gender+" "+company+" "+address+" "+phone+" "+email+" " +status +" "+ age;
     }
 
     

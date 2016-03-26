@@ -5,15 +5,15 @@
  */
 package vu_guest;
 
-import connection.DbConnect;
+
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Toolkit;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Vector;
+import java.sql.Date;
+
+
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import projectinterface.CentralInterface;
 import projectinterface.DAOConnection;
 
@@ -21,7 +21,7 @@ import projectinterface.DAOConnection;
  *
  * @author KeVin
  */
-public class Addcustomer extends javax.swing.JDialog implements CentralInterface,DAOConnection{
+public class Addcustomer extends javax.swing.JDialog implements CentralInterface{
 
     /**
      * Creates new form Addcustomer
@@ -29,24 +29,15 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         DefaultComboBoxModel cstatus;
         CustomerEnity cusenity;
         CustomerDao cusDao;
-        DbConnect db;
-        Statement st;
-        ResultSet rs;
-        Connection con;
-        String sql;
-        
+        DefaultComboBoxModel cmModel;
+
         public Addcustomer(java.awt.Frame parent, boolean modal) {
             super(parent, modal);
             initComponents();
             setTitle("Add Customer");
-            cusenity=new CustomerEnity();
-            cusDao=new CustomerDao();
-            formDisplayCentral();
-            cstatus=new DefaultComboBoxModel();
-            cstatus.addElement("New");
-            cstatus.addElement("Old");
-            tstatus.setModel(cstatus);
-    }
+            cmModel = new DefaultComboBoxModel(new Object[] {"New","Old"});
+            cmStatus.setModel(cmModel);
+        }
 
     
 
@@ -74,7 +65,7 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         temail = new javax.swing.JTextField();
         tage = new com.toedter.calendar.JDateChooser();
         taddress = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        taAdrress = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
         tidentifier = new javax.swing.JTextField();
         tmale = new javax.swing.JRadioButton();
@@ -82,7 +73,7 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         jLabel8 = new javax.swing.JLabel();
         tcompany = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        tstatus = new javax.swing.JComboBox<>();
+        cmStatus = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         btnAddPay = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -190,9 +181,9 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         gridBagConstraints.insets = new java.awt.Insets(9, 31, 9, 31);
         jPanel3.add(tage, gridBagConstraints);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        taddress.setViewportView(jTextArea1);
+        taAdrress.setColumns(20);
+        taAdrress.setRows(5);
+        taddress.setViewportView(taAdrress);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -215,6 +206,7 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         jPanel3.add(tidentifier, gridBagConstraints);
 
         buttonGroup1.add(tmale);
+        tmale.setSelected(true);
         tmale.setText("Male");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -254,19 +246,24 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         gridBagConstraints.insets = new java.awt.Insets(9, 31, 9, 31);
         jPanel3.add(jLabel9, gridBagConstraints);
 
-        tstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 8;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(9, 31, 9, 31);
-        jPanel3.add(tstatus, gridBagConstraints);
+        jPanel3.add(cmStatus, gridBagConstraints);
 
         btnAddPay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/add24.png"))); // NOI18N
         btnAddPay.setText("Add");
         btnAddPay.setMaximumSize(new java.awt.Dimension(93, 33));
         btnAddPay.setMinimumSize(new java.awt.Dimension(93, 33));
         btnAddPay.setPreferredSize(new java.awt.Dimension(93, 33));
+        btnAddPay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPayActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnAddPay);
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/cancel24.png"))); // NOI18N
@@ -298,6 +295,23 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
     private void tnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tnameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tnameActionPerformed
+
+    private void btnAddPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPayActionPerformed
+        //identifier,fullname,gender,company,address,phone,email,status;
+        String identifier= tidentifier.getText();
+        String fullname = tname.getText();
+        String gen = (tmale.isSelected())?"Male": "Female";
+        String address = taAdrress.getText();
+        String company = tcompany.getText();
+        String phone = tphone.getText();
+        String email = temail.getText();
+        String status = cmStatus.getSelectedItem().toString();
+        //Date age = tage.getDateFormatString();
+        cusenity = new CustomerEnity(identifier, fullname, gen, company, address, phone, email, status, new Date(12134242));
+        cusDao = new CustomerDao();
+        cusDao.insert((Object) cusenity);
+        JOptionPane.showMessageDialog(this, fullname + " added succeefully");
+    }//GEN-LAST:event_btnAddPayActionPerformed
 
     /**
      * @param args the command line arguments
@@ -344,6 +358,7 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddPay;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> cmStatus;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -357,7 +372,7 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea taAdrress;
     private javax.swing.JScrollPane taddress;
     private com.toedter.calendar.JDateChooser tage;
     private javax.swing.JTextField tcompany;
@@ -367,7 +382,6 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
     private javax.swing.JRadioButton tmale;
     private javax.swing.JTextField tname;
     private javax.swing.JTextField tphone;
-    private javax.swing.JComboBox<String> tstatus;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -382,33 +396,13 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
 
     @Override
     public void checkEmptyField() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
-    
-    
-    @Override
-    public void insert() {
-        
-    }
-
-    @Override
-    public void update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void showData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
-    @Override
-    public ResultSet getData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 }

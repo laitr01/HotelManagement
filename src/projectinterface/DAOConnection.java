@@ -6,6 +6,7 @@
 package projectinterface;
 
 import java.sql.ResultSet;
+import java.util.Vector;
 
 /**
  *
@@ -13,8 +14,8 @@ import java.sql.ResultSet;
  */
 public interface DAOConnection {
     
-    public ResultSet getData();
-    public void insert();
+    public Vector getCollection();
+    public void insert(Object obj);
     public void update();
     public void delete();
     
