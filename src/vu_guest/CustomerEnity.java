@@ -5,7 +5,9 @@
  */
 package vu_guest;
 
-import java.sql.Date;
+import java.util.Date;
+
+
 
 /**
  *
@@ -14,9 +16,9 @@ import java.sql.Date;
 public class CustomerEnity {
     private String identifier,fullname,gender,company,address,phone,email,status;
     private Date age;
-    private int cusID;
+    
 
-    public CustomerEnity(String identifier, String fullname, String gender, String company, String address, String phone, String email, String status, Date age, int cusID) {
+    public CustomerEnity(String identifier, String fullname, String gender, String company, String address, String phone, String email, String status, Date age) {
         this.identifier = identifier;
         this.fullname = fullname;
         this.gender = gender;
@@ -26,7 +28,7 @@ public class CustomerEnity {
         this.email = email;
         this.status = status;
         this.age = age;
-        this.cusID = cusID;
+        
     }
 
     public CustomerEnity() {
@@ -105,12 +107,6 @@ public class CustomerEnity {
         this.age = age;
     }
 
-    public int getCusID() {
-        return cusID;
-    }
-
-    public void setCusID(int cusID) {
-        this.cusID = cusID;
-    }
+    
     
 }

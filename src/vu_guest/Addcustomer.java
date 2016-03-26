@@ -12,8 +12,12 @@ import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import projectinterface.CentralInterface;
 import projectinterface.DAOConnection;
 
@@ -21,26 +25,33 @@ import projectinterface.DAOConnection;
  *
  * @author KeVin
  */
-public class Addcustomer extends javax.swing.JDialog implements CentralInterface,DAOConnection{
+public class Addcustomer extends javax.swing.JDialog implements CentralInterface{
 
     /**
      * Creates new form Addcustomer
      */
         DefaultComboBoxModel cstatus;
-        CustomerEnity cusenity;
+               
+        CustomerEnity cus;
         CustomerDao cusDao;
         DbConnect db;
         Statement st;
         ResultSet rs;
         Connection con;
         String sql;
+        String identifier,fullname,gender,company,address,phone,email,status;
+        Date age;
+        
         
         public Addcustomer(java.awt.Frame parent, boolean modal) {
             super(parent, modal);
             initComponents();
             setTitle("Add Customer");
-            cusenity=new CustomerEnity();
-            cusDao=new CustomerDao();
+            
+            db=new DbConnect("sa", "");
+            db.createConnect();
+            con = db.getCon();
+            st = db.getStsm();
             formDisplayCentral();
             cstatus=new DefaultComboBoxModel();
             cstatus.addElement("New");
@@ -72,9 +83,8 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         tname = new javax.swing.JTextField();
         tphone = new javax.swing.JTextField();
         temail = new javax.swing.JTextField();
-        tage = new com.toedter.calendar.JDateChooser();
-        taddress = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jscroll = new javax.swing.JScrollPane();
+        taddress = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
         tidentifier = new javax.swing.JTextField();
         tmale = new javax.swing.JRadioButton();
@@ -86,6 +96,7 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         jPanel1 = new javax.swing.JPanel();
         btnAddPay = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        tage = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -179,26 +190,15 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         gridBagConstraints.insets = new java.awt.Insets(9, 31, 9, 31);
         jPanel3.add(temail, gridBagConstraints);
 
-        tage.setAlignmentX(0.0F);
-        tage.setAlignmentY(0.0F);
-        tage.setAutoscrolls(true);
-        tage.setDoubleBuffered(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(9, 31, 9, 31);
-        jPanel3.add(tage, gridBagConstraints);
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        taddress.setViewportView(jTextArea1);
+        taddress.setColumns(20);
+        taddress.setRows(5);
+        jscroll.setViewportView(taddress);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.insets = new java.awt.Insets(9, 31, 9, 31);
-        jPanel3.add(taddress, gridBagConstraints);
+        jPanel3.add(jscroll, gridBagConstraints);
 
         jLabel7.setText("Person Indentifier");
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -267,6 +267,11 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         btnAddPay.setMaximumSize(new java.awt.Dimension(93, 33));
         btnAddPay.setMinimumSize(new java.awt.Dimension(93, 33));
         btnAddPay.setPreferredSize(new java.awt.Dimension(93, 33));
+        btnAddPay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPayActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnAddPay);
 
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/cancel24.png"))); // NOI18N
@@ -278,6 +283,12 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         gridBagConstraints.gridy = 10;
         gridBagConstraints.gridwidth = 2;
         jPanel3.add(jPanel1, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(9, 31, 9, 31);
+        jPanel3.add(tage, gridBagConstraints);
 
         jPanel2.add(jPanel3);
 
@@ -298,6 +309,34 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
     private void tnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tnameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tnameActionPerformed
+
+    private void btnAddPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPayActionPerformed
+            
+            fullname=tname.getText();
+            age = tage.getDate();
+            
+            company=tcompany.getText();
+            phone=tphone.getText();
+            identifier=tidentifier.getText();
+            email=temail.getText();
+            address=taddress.getText();
+            status=(String) tstatus.getSelectedItem();
+            gender="";
+            if(tmale.isSelected()){
+                gender="M";
+                
+            }else{
+                gender="F";
+            }
+            if(gender.equals("Male")){
+            tmale.setSelected(true);
+             }else{
+            tfemale.setSelected(true);
+            }
+            cusDao=new CustomerDao();
+            cusDao.insert();
+       JOptionPane.showMessageDialog(this, "Add successfull");
+    }//GEN-LAST:event_btnAddPayActionPerformed
 
     /**
      * @param args the command line arguments
@@ -357,8 +396,8 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JScrollPane taddress;
+    private javax.swing.JScrollPane jscroll;
+    private javax.swing.JTextArea taddress;
     private com.toedter.calendar.JDateChooser tage;
     private javax.swing.JTextField tcompany;
     private javax.swing.JTextField temail;
@@ -385,30 +424,16 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
-    
-    @Override
-    public void insert() {
-        
-    }
-
-    @Override
-    public void update() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void delete() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @Override
     public void showData() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public ResultSet getData() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
+
+    
+
+    
+    
+    
 }
