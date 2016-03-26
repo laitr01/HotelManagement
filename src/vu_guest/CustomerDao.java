@@ -58,7 +58,7 @@ public class CustomerDao implements DAOConnection{
                 
                 cus=new CustomerEnity(identifier, fullname, gender, company, address, phone, email, status, age, cusID);
                 cuscollection.add(cus);
-                
+               
             }
         } catch (Exception e) {
             e.printStackTrace();

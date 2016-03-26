@@ -26,7 +26,7 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
     /**
      * Creates new form Addcustomer
      */
-        DefaultComboBoxModel cstatus;
+
         CustomerEnity cusenity;
         CustomerDao cusDao;
         DefaultComboBoxModel cmModel;
@@ -37,6 +37,7 @@ public class Addcustomer extends javax.swing.JDialog implements CentralInterface
             setTitle("Add Customer");
             cmModel = new DefaultComboBoxModel(new Object[] {"New","Old"});
             cmStatus.setModel(cmModel);
+            formDisplayCentral();
         }
 
     
