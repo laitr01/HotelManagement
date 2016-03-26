@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Vector;
 import projectinterface.CentralInterface;
 
 /**
@@ -23,12 +24,18 @@ public class ReservationDialog extends javax.swing.JDialog implements CentralInt
     /**
      * Creates new form ReservationDialog
      */
-    public ReservationDialog(java.awt.Frame parent, boolean modal) {
+    public ReservationDialog(java.awt.Frame parent, boolean modal, Vector re) {
         super(parent, modal);
         initComponents();
         setTitle("Add new reservation");
         date = new Date();
         datBook.setDate(date);
+        if(re !=null){
+           txtName.setText(re.get(1).toString());
+           txtIdentify.setText(re.get(2).toString());
+           txtPhone.setText(re.get(3).toString());
+           txtEmail.setText(re.get(4).toString());
+        }
         formDisplayCentral();
     }
 
@@ -106,12 +113,12 @@ public class ReservationDialog extends javax.swing.JDialog implements CentralInt
         jLabel13.setText("User");
 
         datBook.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 datBookAncestorAdded(evt);
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
         });
 
@@ -230,6 +237,11 @@ public class ReservationDialog extends javax.swing.JDialog implements CentralInt
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Guest Information"));
 
         btnSearchCus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon24/search24.png"))); // NOI18N
+        btnSearchCus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchCusActionPerformed(evt);
+            }
+        });
 
         jLabel14.setText("Customer Name (*)");
 
@@ -421,6 +433,10 @@ public class ReservationDialog extends javax.swing.JDialog implements CentralInt
         
     }//GEN-LAST:event_datBookAncestorAdded
 
+    private void btnSearchCusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchCusActionPerformed
+        new SearchCustomer(null, true).setVisible(true);
+    }//GEN-LAST:event_btnSearchCusActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -451,7 +467,7 @@ public class ReservationDialog extends javax.swing.JDialog implements CentralInt
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ReservationDialog dialog = new ReservationDialog(new javax.swing.JFrame(), true);
+                ReservationDialog dialog = new ReservationDialog(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

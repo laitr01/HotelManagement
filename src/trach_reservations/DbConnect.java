@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  * @author Administrator
  */
 public class DbConnect {
-    String url = "jdbc:sqlserver://localhost:1433;database=DemoHotel";
+    String url = "jdbc:sqlserver://localhost:1433;database=HotelManagement";
     private Connection con;
     private Statement stsm;
     String userName, password;
