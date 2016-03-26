@@ -5,34 +5,43 @@
  */
 package vu_guest;
 
+import connection.DbConnect;
 import java.awt.Frame;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Vector;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
-
-
-
-
-
-
-
-
+import javax.swing.table.DefaultTableModel;
+import projectinterface.CentralInterface;
 
 /**
  *
  * @author KeVin
  */
-public class Customer extends javax.swing.JPanel {
+public class Customer extends javax.swing.JPanel implements CentralInterface{
 
     private Frame JFrame;
-
-    
-
-    
-
+    DefaultTableModel cusmodel;
+    DbConnect db;
+    Statement st;
+    ResultSet rs;
+    Connection con;
+    String sql;
+    Vector header,data,row;
+    String cusid,identifier,fullname,gender,company,address,phone,email,status;
+    int dt,id,passport;
     /**
      * Creates new form Customer
      */
     public Customer() {
         initComponents();
+        db=new DbConnect("sa", "");
+        db.createConnect();
+        con=db.getCon();
+        st=db.getStsm();
+        
     }
 
     /**
@@ -56,7 +65,7 @@ public class Customer extends javax.swing.JPanel {
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        custable = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -87,7 +96,6 @@ public class Customer extends javax.swing.JPanel {
         jLabel2.setVerifyInputWhenFocusTarget(false);
         jPanel3.add(jLabel2);
 
-        jButton1.setIcon(new javax.swing.ImageIcon("E:\\sem accp13\\java\\HotelManagement\\images\\search24.png")); // NOI18N
         jButton1.setText("Search");
         jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton1.setMargin(new java.awt.Insets(2, 0, 2, 0));
@@ -140,8 +148,8 @@ public class Customer extends javax.swing.JPanel {
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setForeground(new java.awt.Color(51, 0, 255));
 
-        jTable1.setForeground(new java.awt.Color(102, 51, 255));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        custable.setForeground(new java.awt.Color(102, 51, 255));
+        custable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -152,7 +160,7 @@ public class Customer extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(custable);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel2.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
@@ -208,6 +216,7 @@ public class Customer extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable custable;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -221,8 +230,22 @@ public class Customer extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void formDisplayCentral() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void checkEmptyField() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void showData() {
+        
+    }
 }
