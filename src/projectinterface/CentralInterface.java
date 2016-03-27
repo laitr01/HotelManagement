@@ -12,6 +12,6 @@ package projectinterface;
 public interface CentralInterface {
     
     public void formDisplayCentral();
-    public void checkEmptyField();
+    public boolean checkEmptyField();
     public void showData();
 }
