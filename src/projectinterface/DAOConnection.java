@@ -18,6 +18,6 @@ public interface DAOConnection {
     public void insert(Object obj);
     public void update();
     public void delete();
-    public Vector<Object> search();
+    public Vector<Object> search(String sString);
     
 }
